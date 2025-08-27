@@ -21,6 +21,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'email_verified_at',
     ];
 
     /**
@@ -53,8 +54,23 @@ class User extends Authenticatable
      * @param string $role
      * @return bool
      */
-    public function hasRole(string $role): bool
+    public function hasRole($roles): bool
     {
-        return $this->role === $role;
+        if (is_array($roles)) {
+            return in_array($this->role, $roles);
+        }
+
+        return $this->role === $roles;
+    }
+
+
+    /**
+     * Get the posts created by the user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
     }
 }

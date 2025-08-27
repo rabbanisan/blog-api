@@ -14,7 +14,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // Hapus data user lama agar tidak ada duplikat email
-        User::truncate();
+        User::query()->delete();
+
 
         // Buat user admin
         User::create([

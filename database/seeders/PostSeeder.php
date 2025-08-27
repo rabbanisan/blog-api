@@ -2,25 +2,34 @@
 
 namespace Database\Seeders;
 
+use App\Models\Post;
+use App\Models\User;
+use App\Models\Category;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class CategorySeeder extends Seeder
+class PostSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Jalankan seeder untuk posts.
      */
     public function run(): void
     {
-        $categories = [
-            ['name' => 'Technology', 'slug' => Str::slug('Technology')],
-            ['name' => 'Lifestyle', 'slug' => Str::slug('Lifestyle')],
-            ['name' => 'Education', 'slug' => Str::slug('Education')],
-            ['name' => 'Travel', 'slug' => Str::slug('Travel')],
-            ['name' => 'Food', 'slug' => Str::slug('Food')],
-        ];
+        $user     = User::first();            // ambil user pertama dari UserSeeder
+        $category = Category::first();    // ambil kategori pertama dari CategorySeeder
 
-        DB::table('categories')->insert($categories);
+        for ($i = 1; $i <= 10; $i++) {
+            $title = "Contoh Post ke-$i";
+
+            Post::create([
+                'user_id'      => $user->id,
+                'category_id'  => $category?->id, // bisa null kalau kategori kosong
+                'title'        => $title,
+                'slug'         => Str::slug($title) . '-' . $i, // supaya unik
+                'content'      => "Ini adalah isi dari post ke-$i yang dibuat oleh seeder.",
+                'image'        => null,
+                'published_at' => now()->subDays(rand(0, 30)),
+            ]);
+        }
     }
 }
